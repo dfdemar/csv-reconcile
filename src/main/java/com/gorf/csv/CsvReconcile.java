@@ -11,14 +11,21 @@ public class CsvReconcile {
     private static final String COMMA_DELIMITER = ",";
 
     public static void main(String[] args) throws FileNotFoundException {
-        List<List<String>> records = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File("D:\\David\\qb_transactions.csv"))) {
-            while (scanner.hasNextLine()) {
-                records.add(CsvReconcile.getRecordFromLine(scanner.nextLine()));
-            }
-        }
+        List<List<String>> qbTransactions = CsvReconcile.getCsv(new File("D:\\David\\qb_transactions_date_amount.csv"));
+        List<List<String>> paypalTransactions = CsvReconcile.getCsv(new File("D:\\David\\paypal_transactions.csv"));
 
-        records.forEach(System.out::println);
+        // qbTransactions.forEach(System.out::println);
+        // paypalTransactions.forEach(System.out::println);
+    }
+
+    private static List<List<String>> getCsv(File csvFile) throws FileNotFoundException {
+        try (Scanner scanner = new Scanner(csvFile)) {
+            List<List<String>> rows = new ArrayList<>();
+            while (scanner.hasNextLine()) {
+                rows.add(CsvReconcile.getRecordFromLine(scanner.nextLine()));
+            }
+            return rows;
+        }
     }
 
     private static List<String> getRecordFromLine(String line) {
