@@ -15,7 +15,7 @@ public class CsvReconcile {
         List<QuickbooksEntry> qbEntries = qbEntryRows.stream().map(QuickbooksEntry::fromCsvRow).collect(toList());
 
         List<String> paypalEntryRows = CsvReconcile.getCsv(new File("D:\\David\\paypal_transactions.csv"));
-        List<QuickbooksEntry> paypalEntries = qbEntryRows.stream().map(QuickbooksEntry::fromCsvRow).collect(toList());
+        List<QuickbooksEntry> paypalEntries = paypalEntryRows.stream().map(QuickbooksEntry::fromCsvRow).collect(toList());
 
         qbEntries.forEach(System.out::println);
         paypalEntries.forEach(System.out::println);
