@@ -1,32 +1,17 @@
 package com.gorf.csv;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import com.gorf.csv.data.PayPalEntry;
+import com.gorf.csv.data.QuickBooksEntry;
 
-import static java.util.stream.Collectors.toList;
+import java.util.List;
 
 public class CsvReconcile {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         List<QuickBooksEntry> qbEntries = QuickBooksEntry.fromCsv("D:\\David\\qb_transactions_date_amount.csv");
-
-        List<String> paypalEntryRows = CsvReconcile.getCsv(new File("D:\\David\\paypal_transactions.csv"));
-        List<PayPalEntry> paypalEntries = paypalEntryRows.stream().map(PayPalEntry::fromCsvRow).collect(toList());
+        List<PayPalEntry> ppEntries = PayPalEntry.fromCsv("D:\\David\\paypal_transactions.csv");
 
         qbEntries.forEach(System.out::println);
-        //paypalEntries.forEach(System.out::println);
-    }
-
-    private static List<String> getCsv(File csvFile) throws FileNotFoundException {
-        try (Scanner scanner = new Scanner(csvFile)) {
-            List<String> rows = new ArrayList<>();
-            while (scanner.hasNextLine()) {
-                rows.add(scanner.nextLine());
-            }
-            return rows;
-        }
+        ppEntries.forEach(System.out::println);
     }
 }

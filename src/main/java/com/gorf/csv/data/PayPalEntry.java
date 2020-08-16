@@ -1,40 +1,56 @@
-package com.gorf.csv;
+package com.gorf.csv.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.MappingIterator;
+import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
+import com.fasterxml.jackson.dataformat.csv.CsvMapper;
+import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
-import java.math.BigDecimal;
+import java.io.FileReader;
+import java.io.Reader;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PayPalEntry {
 
-    @JsonProperty
+    @JsonProperty("Date")
     private LocalDate date;
-    @JsonProperty
-    private BigDecimal amount;
+    @JsonProperty("Net")
+    private Double amount;
 
     public LocalDate getDate() {
         return date;
     }
 
-    public BigDecimal getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public static PayPalEntry fromCsvRow(String row) {
-        PayPalEntry entry = new PayPalEntry();
-        try (Scanner rowScanner = new Scanner(row)) {
-            rowScanner.useDelimiter(",");
+    public static List<PayPalEntry> fromCsv(String path) {
+        CsvMapper csvMapper = new CsvMapper();
+        CsvSchema schema = CsvSchema.emptySchema().withHeader();
+        ObjectReader objectReader = csvMapper.reader(PayPalEntry.class).with(schema);
+        List<PayPalEntry> entries = new ArrayList<>();
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            entry.date = LocalDate.parse(rowScanner.next(), formatter);
-
-            entry.amount = rowScanner.nextBigDecimal();
+        try (Reader reader = new FileReader(path)) {
+            MappingIterator<PayPalEntry> iterator = objectReader.readValues(reader);
+            while (iterator.hasNext()) {
+                try {
+                    entries.add(iterator.next());
+                } catch (RuntimeJsonMappingException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         } catch (Exception e) {
-            return new PayPalEntry();
+            return Collections.emptyList();
         }
-        return entry;
+
+        return entries;
     }
 
     public String toString() {
