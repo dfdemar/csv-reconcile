@@ -2,9 +2,6 @@ package com.gorf.csv.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
@@ -13,10 +10,8 @@ import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 
 import java.io.FileReader;
-import java.io.IOException;
 import java.io.Reader;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -62,13 +57,5 @@ public class QuickBooksEntry {
 
     public String toString() {
         return String.format("Date: %s | Amount %s", date, amount);
-    }
-
-    public static class DateDeserializer extends JsonDeserializer<LocalDate> {
-        @Override
-        public LocalDate deserialize(JsonParser parser, DeserializationContext context) throws IOException {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-            return LocalDate.parse(parser.getText(), formatter);
-        }
     }
 }
