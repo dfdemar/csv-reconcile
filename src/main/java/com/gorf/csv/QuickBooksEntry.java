@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class QuickbooksEntry {
+public class QuickBooksEntry {
 
     @JsonProperty
     private LocalDate date;
@@ -22,8 +22,8 @@ public class QuickbooksEntry {
         return amount;
     }
 
-    public static QuickbooksEntry fromCsvRow(String row) {
-        QuickbooksEntry entry = new QuickbooksEntry();
+    public static QuickBooksEntry fromCsvRow(String row) {
+        QuickBooksEntry entry = new QuickBooksEntry();
         try (Scanner rowScanner = new Scanner(row)) {
             rowScanner.useDelimiter(",");
 
@@ -32,7 +32,7 @@ public class QuickbooksEntry {
 
             entry.amount = rowScanner.nextBigDecimal();
         } catch (Exception e) {
-            return new QuickbooksEntry();
+            return new QuickBooksEntry();
         }
         return entry;
     }
